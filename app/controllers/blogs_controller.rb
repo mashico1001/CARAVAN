@@ -9,6 +9,8 @@ class BlogsController < ApplicationController
 
   def index
     @blogs = Blog.all
+    p "標準出力にのみ反映"
+    logger.debug("標準出力とログファイルに記録される")
   end
 
   def new
@@ -16,10 +18,13 @@ class BlogsController < ApplicationController
   end
 
   def create
-    blog = Blog.new(blog_params)
-    blog.save
-    redirect_to blog_path(blog.id)
+    @blog = Blog.new(blog_params)
 
+    if @blog.save
+      redirect_to blog_path(@blog.id)
+    else
+      render :new
+    end
   end
 
   def edit
